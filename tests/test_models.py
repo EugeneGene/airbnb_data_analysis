@@ -59,7 +59,6 @@ class TestFireIncidentModel(unittest.TestCase):
         self.assertEqual(data["x"], fire_incident.x)
         self.assertEqual(data["y"], fire_incident.y)
         self.assertEqual(data["incident_size"], fire_incident.incident_size)
-
         self.assertEqual(datetime.fromisoformat(data["containment_datetime"]), fire_incident.containment_datetime)
         self.assertEqual(datetime.fromisoformat(data["fire_discovery_datetime"]), fire_incident.fire_discovery_datetime)
         self.assertEqual(data["incident_name"], fire_incident.incident_name)
