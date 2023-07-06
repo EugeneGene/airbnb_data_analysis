@@ -24,7 +24,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: fire-incidents
-        image: us.icr.io/se4sci-hackathon/fire-incidents:1.0
+        image: us.icr.io/se4sci-hackathon/fire-incidents:1.0.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
