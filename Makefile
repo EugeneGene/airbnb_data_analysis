@@ -8,6 +8,8 @@ help: ## Display this help
 .PHONY: all
 all: help
 
+##@ Development
+
 .PHONY: clean
 clean:	## Removes all dangling docker images
 	$(info Removing all dangling docker images..)
@@ -41,6 +43,8 @@ run: ## Run the service
 	$(info Starting service...)
 	honcho start
 
+##@ Kubernetes
+
 .PHONY: cluster
 cluster: ## Create a K3D Kubernetes cluster with load balancer and registry
 	$(info Creating Kubernetes cluster with a registry and 1 node...)
@@ -50,6 +54,20 @@ cluster: ## Create a K3D Kubernetes cluster with load balancer and registry
 cluster-rm: ## Remove a K3D Kubernetes cluster
 	$(info Removing Kubernetes cluster...)
 	k3d cluster delete
+
+.PHONY: tekton
+tekton: ## Install Tekton
+	$(info Installing Tekton in the Cluster...)
+	kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+	kubectl apply --filename https://storage.googleapis.com/tekton-releases/triggers/latest/release.yaml
+	kubectl apply --filename https://storage.googleapis.com/tekton-releases/triggers/latest/interceptors.yaml
+	kubectl apply --filename https://storage.googleapis.com/tekton-releases/dashboard/latest/tekton-dashboard-release.yaml
+
+.PHONY: cluster-tasks
+cluster-tasks: ## Create Tekton Cluster Tasks
+	$(info Creating Tekton Cluster Tasks...)
+	wget -qO - https://raw.githubusercontent.com/tektoncd/catalog/main/task/openshift-client/0.2/openshift-client.yaml | sed 's/kind: Task/kind: ClusterTask/g' | kubectl create -f -
+	wget -qO - https://raw.githubusercontent.com/tektoncd/catalog/main/task/buildah/0.4/buildah.yaml | sed 's/kind: Task/kind: ClusterTask/g' | kubectl create -f -
 
 .PHONY: login
 login: ## Login to IBM Cloud using yur api key
