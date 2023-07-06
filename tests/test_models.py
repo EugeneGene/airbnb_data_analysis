@@ -52,25 +52,37 @@ class TestFireIncidentModel(unittest.TestCase):
         """This runs after each test"""
         db.session.remove()
 
-
-    def _validate_data(self, data: list, fire_incident: FireIncident):
+    # pylint: disable=duplicate-code
+    def _validate_data(self, data: dict, fire_incident: FireIncident):
         """Check that the data dictionary matches the file_incident object"""
         self.assertEqual(data["object_id"], fire_incident.object_id)
         self.assertEqual(data["x"], fire_incident.x)
         self.assertEqual(data["y"], fire_incident.y)
         self.assertEqual(data["incident_size"], fire_incident.incident_size)
-        self.assertEqual(datetime.fromisoformat(data["containment_datetime"]), fire_incident.containment_datetime)
-        self.assertEqual(datetime.fromisoformat(data["fire_discovery_datetime"]), fire_incident.fire_discovery_datetime)
+        self.assertEqual(
+            datetime.fromisoformat(data["containment_datetime"]),
+            fire_incident.containment_datetime,
+        )
+        self.assertEqual(
+            datetime.fromisoformat(data["fire_discovery_datetime"]),
+            fire_incident.fire_discovery_datetime,
+        )
         self.assertEqual(data["incident_name"], fire_incident.incident_name)
-        self.assertEqual(data["incident_type_category"], fire_incident.incident_type_category)
+        self.assertEqual(
+            data["incident_type_category"], fire_incident.incident_type_category
+        )
         self.assertEqual(data["initial_latitude"], fire_incident.initial_latitude)
         self.assertEqual(data["initial_longitude"], fire_incident.initial_longitude)
         self.assertEqual(data["poo_city"], fire_incident.poo_city)
         self.assertEqual(data["poo_county"], fire_incident.poo_county)
         self.assertEqual(data["poo_state"], fire_incident.poo_state)
         self.assertEqual(data["fire_cause_id"], fire_incident.fire_cause_id)
-        self.assertEqual(data["poo_landowner_category"], fire_incident.poo_landowner_category)
-        self.assertEqual(data["unique_fire_identifier"], fire_incident.unique_fire_identifier)
+        self.assertEqual(
+            data["poo_landowner_category"], fire_incident.poo_landowner_category
+        )
+        self.assertEqual(
+            data["unique_fire_identifier"], fire_incident.unique_fire_identifier
+        )
 
     ######################################################################
     #  T E S T   C A S E S
@@ -100,18 +112,33 @@ class TestFireIncidentModel(unittest.TestCase):
         self.assertEqual(found_incident.x, fire_incident.x)
         self.assertEqual(found_incident.y, fire_incident.y)
         self.assertEqual(found_incident.incident_size, fire_incident.incident_size)
-        self.assertEqual(found_incident.containment_datetime, fire_incident.containment_datetime)
-        self.assertEqual(found_incident.fire_discovery_datetime, fire_incident.fire_discovery_datetime)
+        self.assertEqual(
+            found_incident.containment_datetime, fire_incident.containment_datetime
+        )
+        self.assertEqual(
+            found_incident.fire_discovery_datetime,
+            fire_incident.fire_discovery_datetime,
+        )
         self.assertEqual(found_incident.incident_name, fire_incident.incident_name)
-        self.assertEqual(found_incident.incident_type_category, fire_incident.incident_type_category)
-        self.assertEqual(found_incident.initial_latitude, fire_incident.initial_latitude)
-        self.assertEqual(found_incident.initial_longitude, fire_incident.initial_longitude)
+        self.assertEqual(
+            found_incident.incident_type_category, fire_incident.incident_type_category
+        )
+        self.assertEqual(
+            found_incident.initial_latitude, fire_incident.initial_latitude
+        )
+        self.assertEqual(
+            found_incident.initial_longitude, fire_incident.initial_longitude
+        )
         self.assertEqual(found_incident.poo_city, fire_incident.poo_city)
         self.assertEqual(found_incident.poo_county, fire_incident.poo_county)
         self.assertEqual(found_incident.poo_state, fire_incident.poo_state)
         self.assertEqual(found_incident.fire_cause_id, fire_incident.fire_cause_id)
-        self.assertEqual(found_incident.poo_landowner_category, fire_incident.poo_landowner_category)
-        self.assertEqual(found_incident.unique_fire_identifier, fire_incident.unique_fire_identifier)
+        self.assertEqual(
+            found_incident.poo_landowner_category, fire_incident.poo_landowner_category
+        )
+        self.assertEqual(
+            found_incident.unique_fire_identifier, fire_incident.unique_fire_identifier
+        )
 
     def test_update_a_fire_incident(self):
         """It should Update a FireIncident"""
@@ -211,5 +238,5 @@ class TestFireIncidentModel(unittest.TestCase):
         self.assertEqual(len(FireIncident.all()), 10)
 
         # test if poo_county filter works
-        poo_list = [poo for poo in FireIncident.find_by_poo_county(poo_county)]
+        poo_list = list(FireIncident.find_by_poo_county(poo_county))
         self.assertEqual(len(poo_list), poo_county_count)

@@ -80,7 +80,10 @@ def get_fire_incidents(object_id):
     app.logger.info("Request for fire incident with id: %s", object_id)
     fire_incident = FireIncident.find(object_id)
     if not fire_incident:
-        abort(status.HTTP_404_NOT_FOUND, f"FireIncident with id '{object_id}' was not found.")
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"FireIncident with id '{object_id}' was not found.",
+        )
 
     app.logger.info("Returning fire incident: %s", str(fire_incident))
     return jsonify(fire_incident.serialize()), status.HTTP_200_OK
@@ -101,7 +104,9 @@ def create_fire_incidents():
     fire_incident.deserialize(request.get_json())
     fire_incident.create()
     message = fire_incident.serialize()
-    location_url = url_for("get_fire_incidents", object_id=fire_incident.object_id, _external=True)
+    location_url = url_for(
+        "get_fire_incidents", object_id=fire_incident.object_id, _external=True
+    )
 
     app.logger.info("FireIncident with ID [%s] created.", fire_incident.object_id)
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
@@ -122,7 +127,10 @@ def update_fire_incidents(object_id):
 
     fire_incident = FireIncident.find(object_id)
     if not fire_incident:
-        abort(status.HTTP_404_NOT_FOUND, f"FireIncident with id '{object_id}' was not found.")
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"FireIncident with id '{object_id}' was not found.",
+        )
 
     fire_incident.deserialize(request.get_json())
     fire_incident.object_id = object_id

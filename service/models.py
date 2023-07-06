@@ -4,7 +4,7 @@ Models for FireIncident
 All of the models are stored in this module
 """
 import logging
-from datetime import datetime, timezone
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 
 logger = logging.getLogger("flask.app")
@@ -15,14 +15,15 @@ db = SQLAlchemy()
 
 # Function to initialize the database
 def init_db(app):
-    """ Initializes the SQLAlchemy app """
+    """Initializes the SQLAlchemy app"""
     FireIncident.init_db(app)
 
 
 class DataValidationError(Exception):
-    """ Used for an data validation errors when deserializing """
+    """Used for an data validation errors when deserializing"""
 
 
+# pylint: disable=too-many-instance-attributes
 class FireIncident(db.Model):
     """
     Class that represents a FireIncident
@@ -56,7 +57,6 @@ class FireIncident(db.Model):
         Creates a FireIncident to the database
         """
         logger.info("Creating %s", str(self))
-        self.id = None  # pylint: disable=invalid-name
         db.session.add(self)
         db.session.commit()
 
@@ -68,30 +68,30 @@ class FireIncident(db.Model):
         db.session.commit()
 
     def delete(self):
-        """ Removes a FireIncident from the data store """
+        """Removes a FireIncident from the data store"""
         logger.info("Deleting %s", str(self))
         db.session.delete(self)
         db.session.commit()
 
     def serialize(self):
-        """ Serializes a FireIncident into a dictionary """
+        """Serializes a FireIncident into a dictionary"""
         return {
-            "object_id" : self.object_id,
-            "x" : self.x,
-            "y" : self.y,
-            "incident_size" : self.incident_size,
-            "containment_datetime" : self.containment_datetime.isoformat(),
-            "fire_discovery_datetime" : self.fire_discovery_datetime.isoformat(),
-            "incident_name" : self.incident_name,
-            "incident_type_category" : self.incident_type_category,
-            "initial_latitude" : self.initial_latitude ,
-            "initial_longitude" : self.initial_longitude,
-            "poo_city" : self.poo_city,
-            "poo_county" : self.poo_county,
-            "poo_state" : self.poo_state,
-            "fire_cause_id" :self.fire_cause_id ,
+            "object_id": self.object_id,
+            "x": self.x,
+            "y": self.y,
+            "incident_size": self.incident_size,
+            "containment_datetime": self.containment_datetime.isoformat(),
+            "fire_discovery_datetime": self.fire_discovery_datetime.isoformat(),
+            "incident_name": self.incident_name,
+            "incident_type_category": self.incident_type_category,
+            "initial_latitude": self.initial_latitude,
+            "initial_longitude": self.initial_longitude,
+            "poo_city": self.poo_city,
+            "poo_county": self.poo_county,
+            "poo_state": self.poo_state,
+            "fire_cause_id": self.fire_cause_id,
             "poo_landowner_category": self.poo_landowner_category,
-            "unique_fire_identifier": self.unique_fire_identifier
+            "unique_fire_identifier": self.unique_fire_identifier,
         }
 
     def deserialize(self, data):
@@ -103,11 +103,15 @@ class FireIncident(db.Model):
         """
         try:
             self.object_id = data["object_id"]
-            self.x = data["x"]
-            self.y = data["y"]
+            self.x = data["x"]  # pylint: disable=invalid-name
+            self.y = data["y"]  # pylint: disable=invalid-name
             self.incident_size = data["incident_size"]
-            self.containment_datetime = datetime.fromisoformat(data["containment_datetime"])
-            self.fire_discovery_datetime = datetime.fromisoformat(data["fire_discovery_datetime"])
+            self.containment_datetime = datetime.fromisoformat(
+                data["containment_datetime"]
+            )
+            self.fire_discovery_datetime = datetime.fromisoformat(
+                data["fire_discovery_datetime"]
+            )
             self.incident_name = data["incident_name"]
             self.incident_type_category = data["incident_type_category"]
             self.initial_latitude = data["initial_latitude"]
@@ -131,7 +135,7 @@ class FireIncident(db.Model):
 
     @classmethod
     def init_db(cls, app):
-        """ Initializes the database session """
+        """Initializes the database session"""
         logger.info("Initializing database")
         cls.app = app
         # This is where we initialize SQLAlchemy from the Flask app
@@ -141,13 +145,13 @@ class FireIncident(db.Model):
 
     @classmethod
     def all(cls):
-        """ Returns all of the FireIncidents in the database """
+        """Returns all of the FireIncidents in the database"""
         logger.info("Processing all FireIncidents")
         return cls.query.all()
 
     @classmethod
     def find(cls, by_id):
-        """ Finds a FireIncident by it's ID """
+        """Finds a FireIncident by it's ID"""
         logger.info("Processing lookup for id %s ...", by_id)
         return cls.query.get(by_id)
 

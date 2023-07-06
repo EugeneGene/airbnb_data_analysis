@@ -26,7 +26,6 @@ Test cases can be run with the following:
 
 import os
 import logging
-from datetime import datetime
 from unittest import TestCase
 
 # from unittest.mock import MagicMock, patch
@@ -83,32 +82,45 @@ class TestFireIncidentService(TestCase):
             test_fire_incident = FireIncidentFactory()
             response = self.client.post(BASE_URL, json=test_fire_incident.serialize())
             self.assertEqual(
-                response.status_code, status.HTTP_201_CREATED, "Could not create test fire incident"
+                response.status_code,
+                status.HTTP_201_CREATED,
+                "Could not create test fire incident",
             )
             new_fire_incident = response.get_json()
             test_fire_incident.object_id = new_fire_incident["object_id"]
             fire_incidents.append(test_fire_incident)
         return fire_incidents
-    
-    def _validate_data(self, data: list, fire_incident: FireIncident):
+
+    # pylint: disable=duplicate-code
+    def _validate_data(self, data: dict, fire_incident: FireIncident):
         """Check that the data dictionary matches the file_incident object"""
         self.assertEqual(data["object_id"], fire_incident.object_id)
         self.assertEqual(data["x"], fire_incident.x)
         self.assertEqual(data["y"], fire_incident.y)
         self.assertEqual(data["incident_size"], fire_incident.incident_size)
-        self.assertEqual(data["containment_datetime"], fire_incident.containment_datetime.isoformat())
-        self.assertEqual(data["fire_discovery_datetime"], fire_incident.fire_discovery_datetime.isoformat())
+        self.assertEqual(
+            data["containment_datetime"], fire_incident.containment_datetime.isoformat()
+        )
+        self.assertEqual(
+            data["fire_discovery_datetime"],
+            fire_incident.fire_discovery_datetime.isoformat(),
+        )
         self.assertEqual(data["incident_name"], fire_incident.incident_name)
-        self.assertEqual(data["incident_type_category"], fire_incident.incident_type_category)
+        self.assertEqual(
+            data["incident_type_category"], fire_incident.incident_type_category
+        )
         self.assertEqual(data["initial_latitude"], fire_incident.initial_latitude)
         self.assertEqual(data["initial_longitude"], fire_incident.initial_longitude)
         self.assertEqual(data["poo_city"], fire_incident.poo_city)
         self.assertEqual(data["poo_county"], fire_incident.poo_county)
         self.assertEqual(data["poo_state"], fire_incident.poo_state)
         self.assertEqual(data["fire_cause_id"], fire_incident.fire_cause_id)
-        self.assertEqual(data["poo_landowner_category"], fire_incident.poo_landowner_category)
-        self.assertEqual(data["unique_fire_identifier"], fire_incident.unique_fire_identifier)
-
+        self.assertEqual(
+            data["poo_landowner_category"], fire_incident.poo_landowner_category
+        )
+        self.assertEqual(
+            data["unique_fire_identifier"], fire_incident.unique_fire_identifier
+        )
 
     ######################################################################
     #  T E S T   C A S E S
@@ -146,7 +158,7 @@ class TestFireIncidentService(TestCase):
         # Test that the data is correct
         data = response.get_json()
         self._validate_data(data, fire_incident)
- 
+
     def test_get_fire_incident_not_found(self):
         """It should not Get a FireIncident thats not found"""
         response = self.client.get(f"{BASE_URL}/0")
@@ -187,7 +199,9 @@ class TestFireIncidentService(TestCase):
         new_fire_incident = response.get_json()
         logging.debug(new_fire_incident)
         new_fire_incident["incident_name"] = "$%^&*()"
-        response = self.client.put(f"{BASE_URL}/{new_fire_incident['object_id']}", json=new_fire_incident)
+        response = self.client.put(
+            f"{BASE_URL}/{new_fire_incident['object_id']}", json=new_fire_incident
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_fire_incident = response.get_json()
         self.assertEqual(updated_fire_incident["incident_name"], "$%^&*()")
@@ -206,11 +220,12 @@ class TestFireIncidentService(TestCase):
         """It should Query FireIncidents by POO County"""
         fire_incidents = self._create_fire_incidents(10)
         poo_county = fire_incidents[0].poo_county
-        poo_county_fire_incidents = [fire_incident for fire_incident in fire_incidents if fire_incident.poo_county == poo_county]
-        response = self.client.get(
-            BASE_URL,
-            query_string=f"poo_county={poo_county}"
-        )
+        poo_county_fire_incidents = [
+            fire_incident
+            for fire_incident in fire_incidents
+            if fire_incident.poo_county == poo_county
+        ]
+        response = self.client.get(BASE_URL, query_string=f"poo_county={poo_county}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(len(data), len(poo_county_fire_incidents))
@@ -236,4 +251,3 @@ class TestFireIncidentService(TestCase):
         """It should not Create a FireIncident with the wrong content type"""
         response = self.client.post(BASE_URL, data="hello", content_type="text/html")
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
-
