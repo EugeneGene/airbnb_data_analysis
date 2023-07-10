@@ -40,8 +40,8 @@ spec:
               memory: "32Mi"
       volumes:
       - name: postgres-storage
-        emptyDir: {}
-
+        persistentVolumeClaim:
+          claimName: se4sci-postgres
 ---
 apiVersion: v1
 kind: Service
