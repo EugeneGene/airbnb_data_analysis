@@ -33,7 +33,14 @@ sudo chmod a+x /usr/local/bin/yq
 echo "**********************************************************************"
 echo "Install OpenShift CLI..."
 echo "**********************************************************************"
-curl https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz --output oc.tar.gz
+# Platform specific installs
+if [ $(uname -m) == aarch64 ]; then
+    echo "Installing OC for ARM64..."
+    curl https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux-arm64.tar.gz --output oc.tar.gz
+else
+    echo "Installing OC for x86_64..."
+    curl https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz --output oc.tar.gz
+fi;
 sudo tar xvzf oc.tar.gz -C /usr/local/bin/ oc
 sudo ln -s /usr/local/bin/oc /usr/bin/oc
 rm oc.tar.gz
