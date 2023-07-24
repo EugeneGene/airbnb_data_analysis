@@ -1,17 +1,13 @@
-# Software Engineering for Scientists (SE4Sci) Hack-a-thon 1 Project Solution
+# AirBnB Analysis
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
 
-This is one solution to SE4Sci Hackathon 1 for groups that didn't complete the hackathon or want a fresh start.
 
 ## Overview
 
-This repo contains a PostgreSQL model and REST API for a Fire Incident service. It can be used by any of the groups but especially those groups that did not complete Hackathon 1. You can use this is the code to start Hackathon 2.
+This repo contains two containers: a PostgreSQL database and a developer environment
 
-## Automatic Setup
-
-The best way to use this repo is to start your own repo using it as a git template. To do this just press the green **Use this template** button in GitHub and this will become the source for your repository.
 
 ## Contents
 
