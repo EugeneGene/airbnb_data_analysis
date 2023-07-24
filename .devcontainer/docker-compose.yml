@@ -8,7 +8,7 @@ services:
       context: ..
       dockerfile: .devcontainer/Dockerfile    
     hostname: ibm
-    container_name: se4sci
+    container_name: airbnb
     volumes:
       - ..:/app
       # - ~/.bluemix/apikey.json:/home/vscode/.bluemix/apikey.json
@@ -26,8 +26,8 @@ services:
   postgres:
     image: postgres:alpine
     # Uncomment ports to access database from your computer (optional)
-    # ports:
-    #   - 5432:5432
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
