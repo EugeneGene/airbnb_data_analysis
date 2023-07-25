@@ -6,7 +6,9 @@
 
 ## Overview
 
-This repo contains two containers: a PostgreSQL database and a developer environment
+This repo contains two containers: a PostgreSQL database and a developer environment.
+
+For Project 1, the work to be reviewed will reside in the `notebooks/` directory.
 
 
 ## Contents
@@ -26,6 +28,20 @@ deploy/                    - K8s deployment files
 ├── deployment.yaml        - Deployment
 ├── postgresql.yaml        - PostgreSQL
 └── service.yaml           - Service
+
+docs/                      - Github Pages
+├── doc.txt                - 
+└── index.html             - AirBnB Data Analysis Blog
+
+notebooks/                                         - Jupyter Notebooks
+├── data                                           - Deployment
+    ├── large_data_100MB     - Directory for large Data 
+    └── small_data_100MB     - Directory for small data
+        ├── archive          - Seattle Airbnb data directory
+            ├── calendar.csv          
+            ├── listings.csv          
+            └── reviews.csv         
+└── seattle-airbnb-exploration_REBEdit.ipynb      - Example Notebook
 
 service/                   - service python package
 ├── __init__.py            - package initializer
