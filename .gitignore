@@ -103,4 +103,4 @@ ENV/
 # Rope project settings
 .ropeproject
 
-# Large Data
+# Exclude Large Data from repo
